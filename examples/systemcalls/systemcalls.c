@@ -16,7 +16,11 @@ bool do_system(const char *cmd)
  *   and return a boolean true if the system() call completed with success
  *   or false() if it returned a failure
 */
-
+    int ret = system(cmd);
+    if (ret != 0)
+    {
+        return false;
+    }
     return true;
 }
 
@@ -58,9 +62,30 @@ bool do_exec(int count, ...)
  *   as second argument to the execv() command.
  *
 */
+    int new_id = fork();
+    int ret;
 
+    if (new_id == 0)
+    {
+        execv(command[0], command);
+        printf("Error: child: execv: %s\n", strerror(errno));
+        exit(EXIT_FAILURE);
+    }
+    else if (new_id == -1)
+    {
+        printf("Error: fork: %s\n", strerror(errno));
+        return false;
+    }
+    else
+    {
+        waitpid(new_id, &ret, WUNTRACED);
+    }
+    if (WEXITSTATUS(ret) != 0)
+    {
+        printf("Parent: child exit: non zero return of child.\n");
+        return false;
+    }
     va_end(args);
-
     return true;
 }
 
@@ -92,7 +117,38 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
  *   The rest of the behaviour is same as do_exec()
  *
 */
-
+    int fd;
+    fd = open(outputfile,O_CREAT | O_WRONLY, 0644);
+    if (fd < 0)
+    {
+        perror("open");
+        return false;
+    }
+    dup2(fd, 1);
+    int new_id = fork();
+    int ret;
+    if (new_id == 0)
+    {
+        execvp(command[0], command);
+        close(fd);
+        printf("Error: child: execv: %s\n",strerror(errno));
+        return false;
+    }
+    else if (new_id == -1)
+    {
+        printf("Parent: fork: %s\n", strerror(errno));
+        close(fd);
+        return false;
+    }
+    else
+    {
+        waitpid(new_id, &ret, WUNTRACED);
+    }
+    if ( WEXITSTATUS(ret) != 0)
+    {
+        printf("Parent: child exit: non zero return of child.\n");
+        return false;
+    }
     va_end(args);
 
     return true;
