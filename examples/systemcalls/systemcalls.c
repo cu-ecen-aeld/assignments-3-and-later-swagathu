@@ -124,6 +124,7 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
         perror("open");
         return false;
     }
+    int stdout_clone = dup(1);
     dup2(fd, 1);
     int new_id = fork();
     int ret;
@@ -131,6 +132,7 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
     {
         execvp(command[0], command);
         close(fd);
+        dup2(stdout_clone, 1);
         printf("Error: child: execv: %s\n",strerror(errno));
         return false;
     }
@@ -138,6 +140,7 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
     {
         printf("Parent: fork: %s\n", strerror(errno));
         close(fd);
+        dup2(stdout_clone, 1);
         return false;
     }
     else
@@ -146,9 +149,13 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
     }
     if ( WEXITSTATUS(ret) != 0)
     {
+        close(fd);
+        dup2(stdout_clone, 1);
         printf("Parent: child exit: non zero return of child.\n");
         return false;
     }
+    close(fd);
+    dup2(stdout_clone, 1);
     va_end(args);
 
     return true;
