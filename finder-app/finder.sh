@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 if [ -z "$1" ] || [ -z "$2" ]
 then
 	echo "Please enter in following format:"
