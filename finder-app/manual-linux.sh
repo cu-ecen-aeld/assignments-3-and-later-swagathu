@@ -75,7 +75,6 @@ fi
 
 # TODO: Make and install busybox
 sudo make ARCH=${ARCH} CROSS_COMPILE="${LOC}" CONFIG_PREFIX=${ROOTFS} defconfig
-#sudo make ARCH=${ARCH} CROSS_COMPILE="${LOC}" CONFIG_PREFIX=${ROOTFS} clean
 sudo make ARCH=${ARCH} CROSS_COMPILE="${LOC}" CONFIG_PREFIX=${ROOTFS} install
 cd ${ROOTFS}
 echo "Library dependencies"
@@ -101,7 +100,6 @@ cp ${FINDER_APP_DIR}/finder.sh ${ROOTFS}/home/
 cp ${FINDER_APP_DIR}/writer ${ROOTFS}/home/
 cp ${FINDER_APP_DIR}/autorun-qemu.sh ${ROOTFS}/home/
 cp ${FINDER_APP_DIR}/finder-test.sh ${ROOTFS}/home/
-cp ${FINDER_APP_DIR}/tmp/home/* ${ROOTFS}/home/
 cp -a ${FINDER_APP_DIR}/conf ${ROOTFS}/home/
 mkdir -p ${ROOTFS}/conf
 cp -r ${FINDER_APP_DIR}/../conf/* ${ROOTFS}/conf/
