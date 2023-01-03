@@ -60,7 +60,6 @@ mkdir bin dev etc home lib lib64 proc sbin sys tmp usr var
 mkdir usr/bin usr/lib usr/sbin
 mkdir -p var/log
 ROOTFS=$(pwd)
-tree -d
 
 cd "$OUTDIR"
 if [ ! -d "${OUTDIR}/busybox" ]
@@ -110,7 +109,7 @@ sudo chown -R root:root *
 # TODO Create initramfs.cpio.gz
 
 cd ${OUTDIR}
-cp linux-stable/arch/arm64/boot/Image .
+cp ${OUTDIR}/linux-stable/arch/${ARCH}/boot/Image ${OUTDIR}/
 cd ${ROOTFS}
 sudo find . | cpio -H newc  -ov --owner root:root > ${OUTDIR}/initramfs.cpio
 cd ${OUTDIR}
