@@ -13,8 +13,7 @@
 #define MAX_CONN_Q  1
 #define ADD_SPACE   1024 //bytes
 #define BUF_MAX_LEN 1024
-//#define LOGFILE     "/var/tmp/aesdsocketdata"
-#define LOGFILE     "./socketdata_log"
+#define LOGFILE     "/var/tmp/aesdsocketdata"
 
 int switchoff = 0;
 
