@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
     int type = SOCK_STREAM;
     int protocol = 0;
     int ret = 0;
-    openlog(NULL, LOG_CONS | LOG_NDELAY | LOG_PID | LOG_PERROR, LOG_USER);
+    openlog(NULL, LOG_CONS | LOG_NDELAY | LOG_PID, LOG_USER);
     sockfd = socket(domain, type, protocol);
     if (sockfd == -1)
     {
